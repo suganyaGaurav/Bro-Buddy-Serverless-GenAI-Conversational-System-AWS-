@@ -1,0 +1,203 @@
+/* =========================
+   Global Reset & Base
+========================= */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background-color: #f4f7fb;
+    color: #1f2933;
+    height: 100vh;
+}
+
+/* =========================
+   App Layout
+========================= */
+.app-container {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+}
+
+/* =========================
+   LEFT: Chat Section
+========================= */
+.chat-section {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    border-right: 1px solid #e5e7eb;
+}
+
+/* Header */
+.chat-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.chat-header h1 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1f2933; /* neutral, not brand-blue */
+}
+
+.tagline {
+    font-size: 13px;
+    color: #6b7280;
+    margin-top: 4px;
+}
+
+/* =========================
+   Chat Window
+========================= */
+.chat-window {
+    flex: 1;
+    padding: 24px;
+    background-color: #f9fafb;
+    overflow-y: auto;
+}
+
+/* Messages */
+.message {
+    max-width: 70%;
+    padding: 12px 14px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Bot messages: very light pastel blue */
+.bot-message {
+    background-color: #eef4ff;
+    color: #1f2933;
+    border: 1px solid #dbe7ff;
+}
+
+/* User messages: neutral gray (no blue dominance) */
+.user-message {
+    background-color: #f1f5f9;
+    color: #111827;
+    margin-left: auto;
+    border: 1px solid #e5e7eb;
+}
+
+/* =========================
+   Chat Input Area
+========================= */
+.chat-input {
+    padding: 16px;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    gap: 12px;
+    background-color: #ffffff;
+}
+
+.chat-input textarea {
+    flex: 1;
+    resize: none;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+    height: 44px;
+    background-color: #ffffff;
+}
+
+.chat-input textarea:focus {
+    outline: none;
+    border-color: #93b4ff; /* pastel blue */
+}
+
+/* Button: outline-first, calm */
+.chat-input button {
+    background-color: #ffffff;
+    color: #1d4ed8;
+    border: 1px solid #c7d2fe;
+    border-radius: 6px;
+    padding: 0 18px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.chat-input button:hover {
+    background-color: #eef4ff;
+}
+
+.chat-input button:disabled {
+    color: #9ca3af;
+    border-color: #e5e7eb;
+    cursor: not-allowed;
+}
+
+/* =========================
+   RIGHT: Side Panel
+========================= */
+.side-panel {
+    flex: 1;
+    background-color: #f8fafc;
+    padding: 20px;
+    overflow-y: auto;
+    border-left: 1px solid #e5e7eb;
+}
+
+.side-panel h2 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #1f2933;
+}
+
+/* =========================
+   Modes Section
+========================= */
+.modes {
+    margin-bottom: 24px;
+}
+
+.mode-btn {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 8px;
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 14px;
+    color: #111827;
+}
+
+/* Active mode: pastel blue border + subtle background */
+.mode-btn.active {
+    background-color: #eef4ff;
+    border-color: #93b4ff;
+    color: #1d4ed8;
+}
+
+.mode-btn:hover {
+    background-color: #f1f5f9;
+}
+
+/* =========================
+   About & Disclaimer
+========================= */
+.about,
+.disclaimer {
+    margin-bottom: 24px;
+    font-size: 13px;
+    color: #374151;
+}
+
+.disclaimer ul {
+    padding-left: 16px;
+}
+
+.disclaimer li {
+    margin-bottom: 6px;
+}
