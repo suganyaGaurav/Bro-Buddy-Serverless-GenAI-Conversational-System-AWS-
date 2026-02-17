@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bro-Buddy</title>
+
+    <!-- Flask-safe static path -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="app-container">
+
+    <!-- LEFT: Chat Area -->
+    <main class="chat-section">
+
+        <header class="chat-header">
+            <h1>🤖 Bro-Buddy</h1>
+            <p class="tagline">Your bro. Your buddy. Talk. Think. Stay grounded.</p>
+        </header>
+
+        <!-- Chat messages -->
+        <section id="chat-window" class="chat-window">
+            <div class="message bot-message">
+                Hey. I’m Bro-Buddy.  
+                Choose a mode and let’s talk.
+            </div>
+        </section>
+
+        <!-- Input -->
+        <footer class="chat-input">
+            <textarea
+                id="user-input"
+                placeholder="Share what’s on your mind…"
+                rows="2"
+            ></textarea>
+            <button id="send-btn">Send</button>
+        </footer>
+
+    </main>
+
+    <!-- RIGHT: Side Panel -->
+    <aside class="side-panel">
+
+        <section class="modes">
+            <h2>Modes</h2>
+
+            <!-- MVP: Only 2 modes -->
+            <button class="mode-btn active" data-mode="professional">
+                💼 Professional Bro
+            </button>
+
+            <button class="mode-btn" data-mode="chill">
+                🧘 Chill Bro
+            </button>
+        </section>
+
+        <section class="about">
+            <h2>About Bro-Buddy</h2>
+            <p>
+                Bro-Buddy is a focused AI companion built to support
+                professional conversations and casual, everyday chats.
+            </p>
+        </section>
+
+        <section class="disclaimer">
+            <h2>Disclaimer</h2>
+            <ul>
+                <li>Not medical or mental health advice</li>
+                <li>Not legal or financial advice</li>
+                <li>Do not share sensitive personal data</li>
+            </ul>
+        </section>
+
+    </aside>
+
+</div>
+
+<!-- MVP JavaScript -->
+<script>
+    let selectedMode = "professional";
+
+    const modeButtons = document.querySelectorAll(".mode-btn");
+    const sendBtn = document.getElementById("send-btn");
+    const inputBox = document.getElementById("user-input");
+    const chatWindow = document.getElementById("chat-window");
+
+    // Mode switching
+    modeButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            modeButtons.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            selectedMode = btn.dataset.mode;
+        });
+    });
+
+    // Send message
+    async function sendMessage() {
+        const text = inputBox.value.trim();
+        if (!text) return;
+
+        chatWindow.innerHTML += `
+            <div class="message user-message">${text}</div>
+        `;
+        inputBox.value = "";
+        sendBtn.disabled = true;
+
+        try {
+            const response = await fetch("/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    query: text,
+                    mode: selectedMode
+                })
+            });
+
+            const data = await response.json();
+
+            chatWindow.innerHTML += `
+                <div class="message bot-message">
+                    ${data.answer || "Something went wrong. Try again."}
+                </div>
+            `;
+        } catch (err) {
+            chatWindow.innerHTML += `
+                <div class="message bot-message">
+                    Backend error. Please try again later.
+                </div>
+            `;
+        } finally {
+            sendBtn.disabled = false;
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+    }
+
+    // Button click
+    sendBtn.addEventListener("click", sendMessage);
+
+    // Enter key support
+    inputBox.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+</script>
+
+</body>
+</html>
