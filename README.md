@@ -1,227 +1,145 @@
-# Bro-Buddy – Serverless GenAI Conversational System (AWS)
-
-AWS serverless LLM inference system with explicit prompt governance, IAM-restricted Bedrock access, cost-aware model configuration, behavioral mode architecture, and observability-driven design.
-
----
+# Bro-Buddy — Governance-First AI Companion System
 
 ## Overview
 
-Bro-Buddy is a production-oriented serverless GenAI inference pipeline built on AWS.
+Bro-Buddy is a **production-style AI companion system** designed with safety, governance, and modular architecture in mind.
 
-The system demonstrates controlled LLM invocation using Amazon Bedrock with:
+Unlike simple chatbot implementations, Bro-Buddy introduces a **layered AI pipeline** that includes guardrails, routing logic, prompt governance, and response validation to ensure responsible AI behavior.
 
-- Enforced inference profile validation  
-- IAM-scoped model permissions  
-- Cost-bounded generation parameters  
-- Governance-aware prompt construction  
-- Mode-separated conversational behavior  
-
-The architecture is intentionally minimal, secure, and scalable.
+The system demonstrates how modern AI assistants can be built with **enterprise-level safety and observability principles**.
 
 ---
 
-## Architecture
+## Key Features
 
-Static Frontend  
-→ API Gateway  
-→ AWS Lambda (Python 3.x)  
-→ Amazon Bedrock (Inference Profile ARN)  
-→ Foundation Model  
-→ Response returned via API Gateway  
-
-### Supporting Components
-
-- IAM Least Privilege Execution Role  
-- CloudWatch Logging  
-- Environment-Based Model Configuration  
-
-No EC2  
-No RDS  
-No Containers  
-
-Pure serverless inference pipeline.
+• Deterministic routing for greetings and simple queries
+• Dual operating modes (Professional Mode and AI Mode)
+• Prompt firewall to prevent prompt injection and architecture probing
+• Privacy guard that detects and masks personally identifiable information (PII)
+• Capacity guard to prevent excessive LLM usage and control costs
+• Conversational memory for session continuity
+• Response validation to prevent prompt leakage and unsafe outputs
+• Structured logging for full pipeline observability
 
 ---
 
-## Conversational Mode Architecture
+## System Pipeline
 
-Bro-Buddy implements explicit behavioral separation using controlled conversational modes.
+The backend follows a **layered AI pipeline architecture**:
 
-Each mode enforces a distinct response framework at the prompt level to ensure clarity, governance alignment, and predictable output style.
+```
+config → handler → capacity_guard → privacy_guard → firewall → routing → memory → orchestrator → llm_client → prompt → validator → logging_utils
+```
 
-### Default Mode: Professional Bro (Calm Mentor)
-
-Professional Bro is the default execution mode.
-
-**Purpose**
-
-Provide structured guidance for:
-- Career development  
-- Learning roadmaps  
-- Performance concerns  
-- Technical concept clarification  
-- Professional decision-making  
-
-**Behavioral Characteristics**
-
-- Offers structured direction instead of instant solutions  
-- Provides conceptual guidance rather than copy-paste production code  
-- Presents balanced trade-offs instead of making decisions  
-- Asks at most one focused clarification question  
-- Maintains a calm, mentor-like tone  
-
-**Boundaries**
-
-- No direct production-ready code generation  
-- No tactical execution scripts  
-- No medical, legal, or financial advice  
+Each component performs a specific function to ensure **safety, reliability, and maintainability**.
 
 ---
 
-### Chill Bro (Warm Companion Mode)
+## Technology Stack
 
-Chill Bro is designed for lighter conversations.
+Frontend
+• HTML
+• CSS
 
-**Purpose**
+Backend
+• Python
 
-- Everyday chats  
-- Emotional processing  
-- Casual discussions  
-- Movies, ideas, general topics  
+AI Model
+• AWS Bedrock (Claude)
 
-**Behavioral Characteristics**
-
-- Validates emotion before offering perspective  
-- Keeps responses concise and warm  
-- Avoids structured career frameworks  
-- Redirects professional guidance to Professional mode when necessary  
-
-This separation ensures behavioral clarity and prevents cross-mode contamination.
+Infrastructure
+• AWS Lambda
+• API Gateway
+• CloudWatch Logs
 
 ---
 
-## Memory Design
+## Project Structure
 
-Bro-Buddy uses session-level conversational memory.
+```
+bro-buddy/
 
-- Conversation history is maintained per browser session  
-- Memory resets when switching modes  
-- Memory window is capped (last N messages) to control cost and drift  
-- No persistent database storage in current scope  
+frontend/
+   index.html
+   style.css
+   README.md
 
-This provides contextual continuity without adding infrastructure complexity.
+backend/
+   handler.py
+   routing.py
+   orchestrator.py
+   llm_client.py
+   firewall.py
+   privacy_guard.py
+   capacity_guard.py
+   validator.py
+   memory_store.py
+   logging_utils.py
+   README.md
 
----
+docs/
+   SYSTEM_ARCHITECTURE.md
+   SYSTEM_WORKFLOW.md
 
-## Key Design Decisions
+evaluation/
 
-### 1. Cost-Controlled Model Strategy
-
-- Bedrock inference profile required (no direct base model usage)  
-- Maximum tokens capped at 150  
-- Temperature set to 0.3 for stable responses  
-- Environment-based configuration for deployment flexibility  
-
-This ensures predictable cost behavior and controlled model access.
-
----
-
-### 2. Governance-First Prompting
-
-- Explicit boundary enforcement (no medical or legal advice)  
-- Mode-based tone switching  
-- Clear separation of system and user messages  
-- Identity lock enforcement  
-- Fail-fast configuration validation  
-
-The system prevents accidental misconfiguration and enforces approved inference paths.
+README.md
+```
 
 ---
 
-### 3. IAM Restriction (Least Privilege)
+## Architecture Philosophy
 
-Lambda execution role limited to:
+The project was designed around the following principles:
 
-- `bedrock:InvokeModel` (scoped to inference profile ARN)  
-- `logs:CreateLogStream`  
-- `logs:PutLogEvents`  
+Safety First
+Multiple guardrails protect the system from misuse and prompt injection.
 
-No unnecessary service permissions.
+Deterministic Routing
+Simple queries are handled without calling the LLM to reduce cost and latency.
 
----
+Observability
+Every stage of the pipeline generates structured logs for monitoring and debugging.
 
-### 4. Runtime Safeguards
-
-- Fails immediately if `MODEL_ID` environment variable is missing  
-- Validates ARN format to enforce inference profile usage  
-- Prevents direct model ID invocation  
-- Lightweight imports to reduce Lambda cold start latency  
-
----
-
-### 5. Observability
-
-- CloudWatch logging for invocation tracing  
-- Structured error handling  
-- Explicit exception propagation  
-- Request-level debugging visibility  
-
-The system supports traceability for:
-
-- API failures  
-- Invocation errors  
-- Unexpected model behavior  
+Modular Design
+Each module performs a clearly defined responsibility.
 
 ---
 
 ## Deployment
 
-- Runtime: Python 3.x  
-- Trigger: API Gateway  
-- Execution: AWS Lambda  
+The system is deployed using a **serverless architecture**.
 
-### Required Environment Variable
+```
+User Interface
+     ↓
+API Gateway
+     ↓
+AWS Lambda
+     ↓
+AWS Bedrock LLM
+     ↓
+CloudWatch Logging
+```
 
-`MODEL_ID`  
-Must contain a valid Bedrock inference profile ARN.
-
-### Required IAM Permissions
-
-- `bedrock:InvokeModel` (scoped to inference profile ARN)  
-- `logs:CreateLogStream`  
-- `logs:PutLogEvents`  
-
----
-
-## Current Scope
-
-This repository focuses strictly on:
-
-- Secure model invocation  
-- Governance enforcement  
-- Mode-based conversational behavior  
-- Serverless cost control  
-- Observability readiness  
-
-It is intentionally minimal to demonstrate architectural clarity rather than feature complexity.
+This architecture enables scalability while minimizing infrastructure overhead.
 
 ---
 
-## Future Enhancements
+## Future Improvements
 
-- Structured latency logging  
-- Token usage accounting  
-- RAG integration layer  
-- Persistent conversation memory  
-- Expanded governance auditing  
-- Frontend telemetry metrics  
+Planned improvements include:
 
----
-
-## Author
-
-Built and designed by Suganya.
+• enhanced intent classification
+• safety keyword routing for medical queries
+• improved conversational memory management
+• advanced evaluation metrics
+• response quality benchmarking
 
 ---
 
-Serverless. Governance-aware. Cost-controlled. Mode-separated. Observability-ready.
+## Project Goal
+
+The goal of this project is to demonstrate how a **governance-first AI system** can be designed, evaluated, and deployed using production-style architecture.
+
+This repository focuses on **system design, safety engineering, and AI pipeline governance** rather than building a simple chatbot interface.
