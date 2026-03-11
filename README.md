@@ -1,6 +1,6 @@
 Live Demo
 
-https://suganyagaurav.github.io/Bro-Buddy-Serverless-GenAI-Conversational-System-AWS/
+suganyagaurav.github.io/Bro-Buddy-Serverless-GenAI-Conversational-System-AWS-/
 
 # Bro-Buddy — Governance-First AI Companion System
 
