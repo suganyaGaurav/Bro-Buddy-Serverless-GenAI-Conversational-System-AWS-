@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bro-Buddy</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app-container">
+
+    <!-- LEFT PANEL -->
+    <main class="chat-section">
+
+        <header class="chat-header">
+            <h1>Bro-Buddy</h1>
+            <p class="tagline">
+                Calm mentor. Clear thinking. Structured AI reasoning.
+            </p>
+        </header>
+
+        <section id="chat-window" class="chat-window">
+            <div class="message bot-message">
+                You're currently in Professional Mode — calm, grounded guidance.
+
+                Switch to AI Mode for deeper system-level reasoning.
+            </div>
+        </section>
+
+        <footer class="chat-input">
+            <textarea
+                id="user-input"
+                placeholder="Share what’s on your mind…"
+                rows="2"
+            ></textarea>
+            <button id="send-btn">Send</button>
+        </footer>
+
+    </main>
+
+    <!-- RIGHT PANEL -->
+    <aside class="side-panel">
+
+        <section class="modes">
+            <h2>Modes</h2>
+
+            <button class="mode-btn active" data-mode="professional">
+                Professional Mode (Default)
+            </button>
+
+            <button class="mode-btn" data-mode="ai">
+                AI Architect Mode
+            </button>
+        </section>
+
+        <section class="mode-description">
+            <h2>Choose Your Mode</h2>
+
+            <div id="mode-info-professional" class="mode-info">
+                <strong>Professional Mode</strong>
+                <p>
+                    Best for career decisions, workplace challenges,
+                    structured growth, and real-world clarity.
+                </p>
+                <p>
+                    Calm mentor tone. Reflective and grounded.
+                </p>
+            </div>
+
+            <div id="mode-info-ai" class="mode-info" style="display:none;">
+                <strong>AI Architect Mode</strong>
+                <p>
+                    Best for AI systems, RAG design, evaluation metrics,
+                    model architecture, and governance.
+                </p>
+                <p>
+                    Systems-focused. Structured. No emotional mentoring tone.
+                </p>
+            </div>
+        </section>
+
+        <section class="disclaimer">
+            <h2>Disclaimer</h2>
+            <ul>
+                <li>Not medical or mental health advice</li>
+                <li>Not legal or financial advice</li>
+                <li>No production-ready code generation</li>
+                <li>Do not share sensitive personal data</li>
+            </ul>
+        </section>
+
+        <section class="about">
+            <h2>About</h2>
+            <p>
+                Bro-Buddy is a governance-aware AI companion designed
+                for thoughtful, structured conversation.
+            </p>
+            <p>
+                It prioritizes clarity over shortcuts and systems thinking
+                over instant answers.
+            </p>
+        </section>
+
+        <footer class="app-footer">
+            <p>Bro-Buddy v1.0</p>
+            <p>Built & Designed by Suganya</p>
+            <p>© 2026 All rights reserved</p>
+        </footer>
+
+    </aside>
+
+</div>
+
+<script>
+
+    const API_URL = "https://stpamnah50.execute-api.us-east-1.amazonaws.com/dev/chat";
+
+    let selectedMode = "professional";
+
+    const modeButtons = document.querySelectorAll(".mode-btn");
+    const sendBtn = document.getElementById("send-btn");
+    const inputBox = document.getElementById("user-input");
+    const chatWindow = document.getElementById("chat-window");
+
+    const professionalInfo = document.getElementById("mode-info-professional");
+    const aiInfo = document.getElementById("mode-info-ai");
+
+
+    // --------------------------------------------------
+    // SESSION ID FOR MEMORY SUPPORT
+    // --------------------------------------------------
+
+    let sessionId = localStorage.getItem("brobuddy_session");
+
+    if (!sessionId) {
+        sessionId = crypto.randomUUID();
+        localStorage.setItem("brobuddy_session", sessionId);
+    }
+
+    console.log("Bro-Buddy Session:", sessionId);
+
+
+    function addMessage(content, className) {
+        const msg = document.createElement("div");
+        msg.className = "message " + className;
+        msg.textContent = content;
+        chatWindow.appendChild(msg);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    // Mode switching
+    modeButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+
+            modeButtons.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+
+            selectedMode = btn.dataset.mode;
+
+            if (selectedMode === "professional") {
+                professionalInfo.style.display = "block";
+                aiInfo.style.display = "none";
+                addMessage("Switched to Professional Mode.", "bot-message");
+            } else {
+                professionalInfo.style.display = "none";
+                aiInfo.style.display = "block";
+                addMessage("Switched to AI Architect Mode.", "bot-message");
+            }
+        });
+    });
+
+    async function sendMessage() {
+        const text = inputBox.value.trim();
+        if (!text) return;
+
+        addMessage(text, "user-message");
+        inputBox.value = "";
+        sendBtn.disabled = true;
+
+        addMessage("Thinking…", "bot-message");
+
+        try {
+            const response = await fetch(API_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    query: text,
+                    mode: selectedMode,
+                    session_id: sessionId
+                })
+            });
+
+            const data = await response.json();
+            chatWindow.removeChild(chatWindow.lastChild);
+
+            if (data.status === "error") {
+                addMessage(data.message, "bot-message");
+            } else {
+                const answer = data.answer || "Unexpected response from server.";
+                addMessage(answer, "bot-message");
+            }
+
+        } catch (err) {
+            chatWindow.removeChild(chatWindow.lastChild);
+            addMessage("Backend error. Please try again later.", "bot-message");
+        } finally {
+            sendBtn.disabled = false;
+        }
+    }
+
+    sendBtn.addEventListener("click", sendMessage);
+
+    inputBox.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+
+</script>
+
+</body>
+</html>
