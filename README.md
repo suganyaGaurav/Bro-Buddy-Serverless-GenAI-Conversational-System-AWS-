@@ -7,7 +7,8 @@ Try sample queries:
 • "Tell me a joke" → LLM response  
 • "My number is 9876543210" → PII masking  
 
-===
+---
+
 ## Screenshots
 
 ### UI Interface
@@ -22,6 +23,8 @@ Try sample queries:
 ---
 
 # Bro-Buddy — Governance-First AI Companion System
+
+A production-ready GenAI system designed with governance, safety, and observability at its core.
 
 ## Overview
 
@@ -76,20 +79,34 @@ Each component performs a specific function to ensure **safety, reliability, and
 
 ## Technology Stack
 
-Frontend
-• HTML
-• CSS
+## Technology Stack
 
-Backend
-• Python
+**Frontend**
+• HTML  
+• CSS  
 
-AI Model
-• AWS Bedrock (Claude)
+**Backend**
+• Python  
 
-Infrastructure
-• AWS Lambda
-• API Gateway
-• CloudWatch Logs
+**AI Model**
+• AWS Bedrock (Claude)  
+
+**Infrastructure**
+• AWS Lambda  
+• API Gateway  
+• CloudWatch Logs  
+
+---
+
+## Why This Matters
+
+Modern GenAI applications require more than just model integration.  
+They must handle safety, cost, reliability, and observability.
+
+This project demonstrates how to design AI systems that are:
+• Safe by design (guardrails and validation)  
+• Cost-aware (controlled LLM usage)  
+• Observable (structured logging and traceability)  
 
 ---
 
@@ -167,13 +184,11 @@ This architecture enables scalability while minimizing infrastructure overhead.
 
 ## Future Improvements
 
-Planned improvements include:
-
-• enhanced intent classification
-• safety keyword routing for medical queries
-• improved conversational memory management
-• advanced evaluation metrics
-• response quality benchmarking
+• Advanced intent classification for better routing  
+• Domain-specific safety filters (e.g., medical queries)  
+• Enhanced memory management for long conversations  
+• Evaluation metrics for response quality and grounding  
+• Automated benchmarking for model performance  
 
 ---
 
