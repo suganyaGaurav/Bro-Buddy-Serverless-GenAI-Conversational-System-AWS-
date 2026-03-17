@@ -1,7 +1,13 @@
-Live Demo
+## Live Demo
 
-suganyagaurav.github.io/Bro-Buddy-Serverless-GenAI-Conversational-System-AWS-/
+🔗 https://suganyagaurav.github.io/Bro-Buddy-Serverless-GenAI-Conversational-System-AWS-/
 
+Try sample queries:
+• "Hi" → deterministic response  
+• "Tell me a joke" → LLM response  
+• "My number is 9876543210" → PII masking  
+
+===
 # Bro-Buddy — Governance-First AI Companion System
 
 ## Overview
@@ -24,6 +30,22 @@ The system demonstrates how modern AI assistants can be built with **enterprise-
 • Conversational memory for session continuity
 • Response validation to prevent prompt leakage and unsafe outputs
 • Structured logging for full pipeline observability
+
+---
+## Impact
+
+• Reduced unnecessary LLM calls using deterministic routing, improving cost efficiency  
+• Improved response safety through multi-layer validation and guardrails  
+• Enabled full pipeline traceability with structured logging  
+• Designed a scalable, serverless architecture using AWS services  
+
+---
+## My Role
+
+• Designed and implemented the end-to-end system architecture  
+• Built guardrails including privacy filter, prompt firewall, and validation layer  
+• Integrated AWS Bedrock with serverless backend (Lambda + API Gateway)  
+• Implemented logging and observability for debugging and monitoring  
 
 ---
 
