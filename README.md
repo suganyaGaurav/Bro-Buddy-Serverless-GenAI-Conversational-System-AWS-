@@ -182,6 +182,108 @@ This architecture enables scalability while minimizing infrastructure overhead.
 
 ---
 
+## Challenges & Engineering Decisions
+
+During pre-deployment evaluation, several system-level challenges were identified through structured testing and CloudWatch log analysis.
+
+### 1. Routing Misclassification (Intent Priority Issue)
+
+**Problem**  
+Queries like “my career feels stuck” were incorrectly classified as vague, skipping LLM reasoning.
+
+**Root Cause**  
+Vague keyword detection was executed before personal context detection.
+
+**Solution**  
+Refined routing priority:
+• Personal context now evaluated before vague detection  
+• Generic keyword matching moved to fallback  
+
+**Impact**  
+Improved intent accuracy without increasing LLM cost or affecting latency  
+
+---
+
+### 2. Greeting Override Issue
+
+**Problem**  
+Queries starting with greetings (e.g., “Hey Bro-Buddy, I need help…”) were routed as simple greetings, ignoring actual user intent.
+
+**Root Cause**  
+Routing logic prioritized greeting detection based on first token only.
+
+**Solution**  
+• Added message-length and context checks  
+• Greeting shortcut applied only for short inputs  
+
+**Impact**  
+Preserved conversational quality and ensured meaningful queries reach the LLM  
+
+---
+
+### 3. Incomplete PII Detection
+
+**Problem**  
+System masked structured PII (emails) but missed contextual entities like names and organizations.
+
+**Root Cause**  
+Regex-based detection limited to structured patterns.
+
+**Solution**  
+• Planned integration of NER-based detection (e.g., spaCy / Presidio)  
+
+**Impact**  
+Improves privacy protection coverage beyond structured identifiers  
+
+---
+
+### 4. Mode-Based LLM Overuse
+
+**Problem**  
+Mode priority caused unnecessary LLM invocation for simple inputs in AI mode.
+
+**Root Cause**  
+Mode authority rule was overriding semantic intent.
+
+**Solution**  
+• Introduced semantic-first routing  
+• Added deterministic mode-mismatch guard before LLM call  
+
+**Impact**  
+Reduced unnecessary token usage and improved cost efficiency  
+
+---
+
+### 5. Semantic Prompt Injection Gap
+
+**Problem**  
+Firewall blocked explicit injection attempts but failed for semantic attacks (e.g., “developer mode”, “print configuration”).
+
+**Root Cause**  
+Pattern matching limited to explicit keywords.
+
+**Solution**  
+• Expanded firewall rules to include semantic attack patterns  
+• Added detection for configuration probing and prompt extraction attempts  
+
+**Impact**  
+Strengthened security and prevented architecture leakage before model invocation  
+
+---
+
+### 6. Observability-Driven Debugging
+
+**Insight**  
+All issues were identified through structured CloudWatch logs without modifying the system prematurely.
+
+**Impact**  
+Enabled traceability across pipeline stages and improved debugging efficiency  
+
+---
+
+These improvements were implemented without changing core architecture, preserving the governance-first design while improving system reliability, safety, and efficiency.
+---
+
 ## Future Improvements
 
 • Advanced intent classification for better routing  
