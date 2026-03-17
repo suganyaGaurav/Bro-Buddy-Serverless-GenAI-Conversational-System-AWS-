@@ -8,6 +8,19 @@ Try sample queries:
 • "My number is 9876543210" → PII masking  
 
 ===
+## Screenshots
+
+### UI Interface
+![UI](screenshots/bro_buddy_UI.png)
+
+### Sample Response
+![Response](screenshots/bro_buddy_UI_response.png)
+
+### Observability (CloudWatch Logs)
+![Logs](screenshots/cloudwatch_logs.png)
+
+---
+
 # Bro-Buddy — Governance-First AI Companion System
 
 ## Overview
