@@ -22,7 +22,7 @@ Try sample queries:
 
 ---
 
-# Bro-Buddy — Governance-First AI Companion System
+# AI Companion System for Guided Conversations [Bro-Buddy] — Governance-First AI Companion System
 
 A production-ready GenAI system designed with governance, safety, and observability at its core.
 
