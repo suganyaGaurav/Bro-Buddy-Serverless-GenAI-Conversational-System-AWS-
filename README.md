@@ -9,7 +9,7 @@ Try sample queries:
 
 ---
 
-## Screenshots
+## Screenshots-
 
 ### UI Interface
 ![UI](screenshots/bro_buddy_UI.png)
